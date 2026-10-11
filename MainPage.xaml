@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalculadoraNETMAUI.MainPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#1C1C1F">
+
+    <ContentPage.Resources>
+        <!-- Estilo base de todas las teclas -->
+        <Style x:Key="EstiloTecla" TargetType="Button">
+            <Setter Property="FontSize" Value="22" />
+			<Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="HeightRequest" Value="58" />
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderWidth" Value="2" />
+            <!-- Efecto de tecla hundida al pulsar -->
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="1" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <VisualState.Setters>
+                                <Setter Property="Scale" Value="0.93" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+        
+        <!-- Números: gris oscuro-->
+        <Style x:Key="EstiloNumero" TargetType="Button" BasedOn="{StaticResource EstiloTecla}">
+            <Setter Property="BackgroundColor" Value="#4B4B52" />
+            <Setter Property="TextColor" Value="#F2F2F2" />
+            <Setter Property="BorderColor" Value="#2A2A2E" />
+        </Style>
+            
+        <!-- Operadores: naranja -->
+        <Style x:Key="EstiloOperador" TargetType="Button" BasedOn="{StaticResource EstiloTecla}">
+            <Setter Property="BackgroundColor" Value="#E08E2F" />
+            <Setter Property="TextColor" Value="#1B1B1B" />
+            <Setter Property="BorderColor" Value="#8A5516" />
+        </Style>
+            
+        <!--Memoria: gris azulado-->
+        <Style x:Key="EstiloMemoria" TargetType="Button" BasedOn="{StaticResource EstiloTecla}">
+            <Setter Property="BackgroundColor" Value="#6C7A89" />
+            <Setter Property="TextColor" Value="#FFFFFF" />
+            <Setter Property="BorderColor" Value="#3E4852" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+            
+        <!-- Borrar: rojo-->
+        <Style x:Key="EstiloBorrar" TargetType="Button" BasedOn="{StaticResource EstiloTecla}">
+            <Setter Property="BackgroundColor" Value="#C0392B" />
+            <Setter Property="TextColor" Value="#FFFFFF" />
+            <Setter Property="BorderColor" Value="#7B241C" />
+        </Style>
+            
+        <!--Igual: crema-->
+        <Style x:Key="EstiloIgual" TargetType="Button" BasedOn="{StaticResource EstiloTecla}">
+            <Setter Property="BackgroundColor" Value="#EADFC4" />
+            <Setter Property="TextColor" Value="#1B1B1B" />
+            <Setter Property="BorderColor" Value="#A89B78" />
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <!--Cuerpo de la calculadora-->
+        <Border WidthRequest="380"
+                Margin="16"
+                Padding="18"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Stroke="#0E0E10"
+                StrokeThickness="4"
+                StrokeShape="RoundRectangle 28">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#3A3A40" Offset="0.0" />
+                    <GradientStop Color="#232327" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <VerticalStackLayout Spacing="14">
+                <!--Cabecera: marca y modelo-->
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Text="RETRO-CALC"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="#E6DCC3"
+                           CharacterSpacing="3"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="FX-90 · SOLAR"
+                           FontSize="11"
+                           TextColor="#E08E2F"
+                           CharacterSpacing="2"
+                           VerticalOptions="Center" />
+                </Grid>
+                
+                <!--Panel solar-->
+                <Border HeightRequest="36"
+                        Padding="3"
+                        BackgroundColor="#1A1424"
+                        Stroke="#101012"
+                        StrokeThickness="3"
+                        StrokeShape="RoundRectangle 6">
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="3">
+                        <BoxView Grid.Column="0" Color="#3B2D5C" CornerRadius="2" />
+                        <BoxView Grid.Column="1" Color="#3B2D5C" CornerRadius="2" />
+                        <BoxView Grid.Column="2" Color="#3B2D5C" CornerRadius="2" />
+                        <BoxView Grid.Column="3" Color="#3B2D5C" CornerRadius="2" />
+                    </Grid>
+                </Border>
+                
+                <!--Pantalla LCD-->
+                <Border BackgroundColor="#B7C29B"
+                        Padding="12, 8"
+                        Stroke="#5E6A49"
+                        StrokeThickness="4"
+                        StrokeShape="RoundRectangle 8">
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Label x:Name="LblIndicadorMemoria"
+                                   Text="M"
+                                   IsVisible="False"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#1E2713" />
+                            <Label x:Name="LblMemoria"
+                                   Grid.Column="1"
+                                   Text="Mem: 0"
+                                   FontSize="13"
+                                   TextColor="#1E2713"
+                                   HorizontalOptions="End" />
+                        </Grid>
+                        <Label x:Name="LblOperacion"
+                               Grid.Row="1"
+                               Text=""
+                               FontSize="14"
+                               FontFamily="Consolas"
+                               TextColor="#555B49"
+                               HeightRequest="20"
+                               HorizontalTextAlignment="End"
+                               VerticalTextAlignment="Center"
+                               LineBreakMode="NoWrap" />
+                        <Label x:Name="LblPantalla"
+                               Grid.Row="2"
+                               Text="0"
+                               FontSize="44"
+                               FontFamily="Consolas"
+                               TextColor="#1E2713"
+                               HeightRequest="60"
+                               HorizontalTextAlignment="End"
+                               VerticalTextAlignment="Center"
+                               LineBreakMode="NoWrap" />
+                    </Grid>
+                </Border>
+                
+                <!--Teclado-->
+                <Grid ColumnDefinitions="*,*,*,*,*"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                    <!--Fila 0-->
+                    <Button Text="C" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                            Style="{StaticResource EstiloBorrar}" Clicked="OnBorrarClicked" />
+                    <Button Text="=" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3"
+                            Style="{StaticResource EstiloIgual}" Clicked="OnIgualClicked" />
+                    
+                    <!--Fila 1-->
+                    <Button Text="MC" Grid.Row="1" Grid.Column="0"
+                            Style="{StaticResource EstiloMemoria}" Clicked="OnMemoriaBorrarClicked" />
+                    <Button Text="7" Grid.Row="1" Grid.Column="1"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="8" Grid.Row="1" Grid.Column="2"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="9" Grid.Row="1" Grid.Column="3"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="÷" Grid.Row="1" Grid.Column="4"
+                            Style="{StaticResource EstiloOperador}" Clicked="OnOperadorClicked" />
+                    
+                    <!--Fila 2-->
+                    <Button Text="M+" Grid.Row="2" Grid.Column="0"
+                            Style="{StaticResource EstiloMemoria}" Clicked="OnMemoriaSumarClicked" />
+                    <Button Text="4" Grid.Row="2" Grid.Column="1"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="5" Grid.Row="2" Grid.Column="2"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="6" Grid.Row="2" Grid.Column="3"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="×" Grid.Row="2" Grid.Column="4"
+                            Style="{StaticResource EstiloOperador}" Clicked="OnOperadorClicked" />
+                    
+                    <!--Fila 3-->
+                    <Button Text="M-" Grid.Row="3" Grid.Column="0"
+                            Style="{StaticResource EstiloMemoria}" Clicked="OnMemoriaRestarClicked" />
+                    <Button Text="1" Grid.Row="3" Grid.Column="1"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="2" Grid.Row="3" Grid.Column="2"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="3" Grid.Row="3" Grid.Column="3"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="-" Grid.Row="3" Grid.Column="4"
+                            Style="{StaticResource EstiloOperador}" Clicked="OnOperadorClicked" />
+                    
+                    <!--Fila 4-->
+                    <Button Text="M" Grid.Row="4" Grid.Column="0"
+                            Style="{StaticResource EstiloMemoria}" Clicked="OnMemoriaRecuperarClicked" />
+                    <Button Text="0" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnNumeroClicked" />
+                    <Button Text="," Grid.Row="4" Grid.Column="3"
+                            Style="{StaticResource EstiloNumero}" Clicked="OnComaClicked" />
+                    <Button Text="+" Grid.Row="4" Grid.Column="4"
+                            Style="{StaticResource EstiloOperador}" Clicked="OnOperadorClicked" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+    </ScrollView>
+
+</ContentPage>

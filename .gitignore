@@ -1,0 +1,49 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio
+.vs/
+.vscode/
+*.sln.iml
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+# MAUI specific
+.maui/
+.maui-cache/
+*.csproj.user
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nupkg.metadata
+.nuget/
+
+# macOS
+.DS_Store
+
+# User-specific files
+*.rsuser
+
+# Rider
+.idea/
+*.sln.iml
+
+# Local environment
+.env
+.env.local
